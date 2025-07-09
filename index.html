@@ -1,19 +1,567 @@
 <!DOCTYPE html>
-<html>
-<title>Podcast</title>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Christopher D. | Portfolio</title>
+  <style>
+    :root {
+      --bg-light: #f0f0f5;
+      --panel: #ffffff;
+      --text: #1a1a1a;
+      --primary: #f59e0b;
+      --accent: #3b82f6;
+      --radius: 16px;
+      --fade: 0.4s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 40px;
+      left: 140px;
+      height: calc(100vh - 80px);
+      /* account for top + bottom margin */
+      overflow-y: auto;
+
+    }
+
+    .card {
+      background-color: #ffffff;
+      color: #1a1a1a;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .card img {
+      width: 180px;
+      height: max-content;
+      border-radius: 00%;
+      object-fit: cover;
+      margin-bottom: 16px;
+    }
+
+    .card h2 {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      background-color: #e4e4ea;
+      border-radius: 12px;
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      color: #555;
+    }
+
+    .divider {
+      border-bottom: 1px solid #ddd;
+      margin: 16px 0;
+    }
+
+    .info-block {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .icon-text {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .icon-circle {
+      background-color: #f0f0f5;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .label {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 2px;
+    }
+
+    .text {
+      font-size: 14px;
+      color: #1a1a1a;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      background-color: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      padding: 24px 20px;
+      /* <-- add horizontal padding here */
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn var(--fade);
+      margin-left: 320px;
+      overflow-x: hidden;
+      /* <-- new line: prevents children from overflowing horizontally */
+    }
+
+    .main-content {
+      flex: 1;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 12px;
+      margin-bottom: 32px;
+    }
+
+    .navbar button {
+      background: none;
+      border: none;
+      color: var(--text);
+      padding: 10px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: 0.3s ease;
+    }
+
+    .navbar button:hover,
+    .navbar button.active-tab {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    p {
+      margin-bottom: 12px;
+    }
+
+    .content {
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .project-card,
+    .blog-post,
+    .about-section {
+      background-color: #fafafa;
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .project-card img {
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 16px;
+    }
+
+    .project-tags {
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    .blog-title {
+      font-size: 18px;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .blog-date {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .about-flex {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .about-flex>div {
+      min-width: 0;
+      max-width: 100%;
+      word-break: break-word;
+    }
+
+    .about-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #ccc;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: var(--accent);
+      color: white;
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 999px;
+      margin-right: 6px;
+      margin-top: 8px;
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .social-icons img {
+      width: 24px;
+      height: 24px;
+      filter: grayscale(100%);
+      transition: 0.3s ease;
+    }
+
+    .social-icons img:hover {
+      filter: none;
+      transform: scale(1.1);
+    }
+
+    .education-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .edu-card {
+      background-color: #f7f7fa;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 16px 20px;
+      transition: 0.3s ease;
+    }
+
+    .edu-card h3 {
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .edu-card ul {
+      padding-left: 18px;
+      list-style-type: disc;
+      font-size: 14px;
+      color: #444;
+    }
+
+    .edu-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+
+    .image-carousel {
+      overflow-x: hidden;
+      width: 100%;
+      margin-top: 40px;
+      position: relative;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 20px;
+      animation: scrollImages 30s linear infinite;
+      width: max-content;
+    }
+
+
+
+    .carousel-track img {
+      max-width: 100%;
+      height: 200px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .carousel-track img:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes scrollImages {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    @media (max-width: 800px) {
+      body {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .sidebar {
+        margin-right: 0;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 24px;
+      }
+
+      .container {
+        width: 100%;
+      }
+
+      .navbar {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
 <body>
+  <!-- Sidebar Card -->
+  <div class="sidebar">
+    <div class="card">
+      <img src="images/photoofme.jpg" alt="Banger photo of me" />
 
-<!-- <h1>Christopher Draper</h1>
+      <h2>Christopher Draper</h2>
+      <div class="subtitle">Freshman @ Purdue</div>
+      <div class="divider"></div>
 
-<p>This is my portfolio</p>-->
+      <div class="info-block">
+        <div class="icon-text">
+          <div class="icon-circle">📧</div>
+          <div>
+            <div class="label">EMAIL</div>
+            <div class="text">draper14@purdue.edu</div>
+          </div>
+        </div>
 
-<div id="buzzsprout-player-17247476"></div><script src="https://www.buzzsprout.com/2506686/episodes/17247476-episode-1-romania-canada-and-the-us-alex-reichel-royce-ward-christopher-draper.js?container_id=buzzsprout-player-17247476&player=small" type="text/javascript" charset="utf-8"></script>
-<!-- <a href="https://instagram.com/chrisdrpr"> instagram.com/chrisdrpr </a>  -->
+        <div class="icon-text">
+          <div class="icon-circle">📍</div>
+          <div>
+            <div class="label">LOCATION</div>
+            <div class="text"> Virginia, USA <br></div>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="social-icons">
+        <a href="https://www.linkedin.com/in/christopher-draper-9a20aa2b0/" target="_blank" aria-label="LinkedIn">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" />
+        </a>
+        <a href="https://www.instagram.com/chrisdrpr" target="_blank" aria-label="Instagram">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" />
+        </a>
+      </div>
+    </div>
+  </div>
 
-<video autoplay loop muted playsinline style="width:19%; height:10%; max-width:600px;">
-  <source src="subway-surfers.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+  <!-- Main Content Container -->
+  <div class="container">
+    <div class="main-content">
+      <div class="navbar">
+        <button class="active-tab" onclick="showSection('about', this)">About Me</button>
+        <button onclick="showSection('projects', this)">Projects</button>
+        <button onclick="showSection('writing', this)">Thoughts</button>
+        <button onclick="showSection('education', this)">Education</button>
 
+      </div>
+
+      <div id="projects" class="content">
+        <h2>Engineering Projects</h2>
+        <div class="project-card">
+          <h3>Pedal-Powered Diwheel</h3>
+          <p>Designed and built an accessible, pedal-powered vehicle that puts a twist on the traditional bicycle,
+            featuring parallel hubless wheels to improve low-speed stability.</p>
+          <a href="Pedal-Powered Diwheel Paper.pdf" target="_blank"
+            style="color: var(--accent); font-weight: bold;">View Full Paper →</a>
+          <img src="images/diwheel1.jpg" alt="Diwheel">
+          <div class="project-tags"></div>
+        </div>
+      </div>
+
+      <div id="writing" class="content">
+        <h2>The Way I See Things (Work in Progess)</h2>
+        <!-- <div class="blog-post">
+          <div class="blog-title">Title </div>
+          <div class="blog-date">July 1, 2025</div>
+          <p>Text</p>
+        </div> -->
+        <!-- <div class="blog-post">
+          <div class="blog-title">The Quiet Lens</div>
+          <div class="blog-date">June 24, 2025</div>
+          <p>I don't speak first — I watch, synthesize, and write. This is how I see systems, stories, and people.</p>
+        </div> -->
+      </div>
+
+      <div id="about" class="content active">
+        <h2>About Me</h2>
+        <div class="about-section">
+          <div class="about-flex">
+            <!-- <img src="https://via.placeholder.com/120" class="about-img" />  -->
+            <div>
+              <p>
+                I’m <strong>Christopher Draper</strong> — an incoming mechanical engineering student at <strong>Purdue
+                  University</strong>, with a passion for building systems that move people forward, literally and
+                figuratively. I grew up in Falls Church, Virginia, and graduated from Thomas Jefferson High School for
+                Science & Technology, where I first discovered how far engineering can go when paired with purpose.
+              </p>
+
+              <p>
+                From prototyping a fully functional <em>pedal-powered diwheel</em> using hubless wheels to researching
+                vehicle stability and drivetrain mechanics, I’ve always been drawn to the intersection of design,
+                physics, and real-world impact.
+              </p>
+
+              <p>
+                At Purdue, I plan to build on that foundation by exploring the <strong>automotive and mobility
+                  sectors</strong>. I’m particularly interested in power transmission, dynamics, and mechanical architecture — how
+                the pieces of a machine can reflect both elegance and engineering rigor. I also hope to get involved in
+                project-based teams and industry-sponsored design programs, and pursue internships that
+                challenge me in robotics, vehicles, or aerospace systems.
+              </p>
+
+              <p>
+                Outside of the lab, I stay grounded through <strong>high-performance sailing</strong> and <strong>rock
+                 climbing</strong>, two sports that demand adaptability, precision, and constant problem-solving. 
+                I’ve competed internationally in ILCA and WASZP sailboats, nationally in
+                indoor climbing, and at the state level in track & field, while helping ignite a climbing club at my high school and
+                mentoring others through the Boy Scouts as an <strong>Eagle Scout with a Gold Palm</strong>.
+              </p>
+
+              <p>
+                At my core, I’m a systems thinker who values clear communication, collaborative problem-solving, and the
+                quiet satisfaction that comes from building something that works and lasts. Whether I’m on the water,
+                in the machine shop, or writing code, I’m always chasing the same goal: <em>to improve the world by
+                  understanding how it’s built.</em>
+              </p>
+              <!-- <div class="badge">OSHA Certified</div>
+              <div class="badge">SolidWorks CSWA</div>
+              <div class="badge">CPR/First Aid</div>  -->
+              <div class="image-carousel">
+                <div class="carousel-track">
+                  <img src="images/photo1.jpg" alt="">
+                  <img src="images/photo2.jpg" alt="">
+                  <img src="images/photo3.jpg" alt="">
+                  <img src="images/photo4.jpg" alt="">
+                  <img src="images/photo5.jpg" alt="">
+                  <img src="images/photo6.jpg" alt="">
+                  <img src="images/photo1.jpg" alt="">
+                  <img src="images/photo2.jpg" alt="">
+                  <img src="images/photo3.jpg" alt="">
+                  <img src="images/photo4.jpg" alt="">
+                  <img src="images/photo5.jpg" alt="">
+                  <img src="images/photo6.jpg" alt="">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="education" class="content">
+        <h2>Some Coursework</h2>
+        <div class="education-grid">
+
+          <div class="edu-card">
+            <h3>12th Grade</h3>
+            <ul>
+              <li>Multivariable Calculus</li>
+              <li>Linear Algebra</li>
+              <li>AP Physics C: Mechanics</li>
+              <li>AP Physics C: Electricity & Magnetism</li>
+              <li>AP English Language</li>
+              <li>AP US Government</li>
+            </ul>
+          </div>
+
+          <div class="edu-card">
+            <h3>11th Grade</h3>
+            <ul>
+              <li>AP Calculus BC</li>
+              <li>AP French Language</li>
+              <li>AP US History</li>
+              <li>Energy Systems</li>
+              <li>Prototyping</li>
+              <li>Artificial Intelligence</li>
+            </ul>
+          </div>
+
+          <div class="edu-card">
+            <h3>10th Grade</h3>
+            <ul>
+              <li>AP Computer Science A + Data Structures</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  </div>
+
+  <script>
+    function showSection(id, btn) {
+      document.querySelectorAll('.content').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.navbar button').forEach(b => b.classList.remove('active-tab'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active-tab');
+    }
+  </script>
 </body>
+
 </html>
